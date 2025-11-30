@@ -8,15 +8,15 @@ End-to-end data pipeline for NYC Yellow Taxi 2024 data using Spark, GCP, dbt, Ai
 2. **Transformation & Modeling (T)**: dbt executes complex transformation logic directly within BigQuery. This phase models staging tables into the final Data Mart (fact and dimensional models), ensuring data is clean and ready for analytics.
 3. **Visualization**: Microsoft Power BI connects to the optimized analytics tables in BigQuery, allowed for direct, real-time querying to generate visualizations.
 
-   ![Data Pipeline Architecture](power-bi\src\etl-pipeline.png)
+   ![Data Pipeline Architecture](power-bi/src/etl-pipeline.png)
 
 ## Data modeling inside Power BI
 
-   ![Data Modeling and Relationships](power-bi\src\model-view.png)
+   ![Data Modeling and Relationships](power-bi/src/model-view.png)
 
 ## Airflow DAG
 
-   ![Airflow DAG](power-bi\src\airflow-dag.png)
+   ![Airflow DAG](power-bi/src/airflow-dag.png)
 ### Data source
 - Parquet files with raw data coming from official NYC TLC Yellow Trips Records (2024): 
 (https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
