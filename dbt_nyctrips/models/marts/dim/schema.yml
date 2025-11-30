@@ -1,0 +1,84 @@
+version: 2
+
+models:
+    # Dimension Tables (dim_date, dim_location, dim_vendor, dim_ratecode, dim_payment)
+  - name: dim_date
+    description: "A dimension table containing date-related information."
+    columns:
+      - name: date_id
+        description: "Calendar date (YYYY-MM-DD)"
+        tests:
+          - not_null
+          - unique
+      - name: year
+        description: "Full year (e.g. 2024)"
+        tests:
+          - not_null
+      - name: month
+        description: "Month number"
+        tests:
+          - not_null
+      - name: day
+        description: "Day of month"
+        tests:
+          - not_null
+      - name: weekday
+        description: "Day of week"
+        tests:
+          - not_null
+      - name: is_weekend
+        description: "True if Saturday or Sunday"
+        tests:
+          - not_null
+          
+  - name: dim_location 
+    description: "A dimension table containing location-related information."
+    columns:
+      - name: location_id
+        description: "The unique identifier for the location."
+        tests:
+          - unique
+          - not_null
+      - name: borough
+        description: "The borough of the location."
+      - name: zone_name
+        description: "The specific zone within the borough."
+      - name: zone_geom
+        description: "Geographical information of the zone."
+  
+  - name: dim_vendor
+    description: "A dimension table containing vendor-related information."
+    columns:
+      - name: vendor_id
+        description: "The unique identifier for the vendor."
+        tests:
+          - not_null
+          - unique
+      - name: vendor_name
+        description: "The name of the vendor."
+        tests:
+          - not_null
+
+  - name: dim_ratecode
+    description: "A dimension table containing rate code information."
+    columns:
+      - name: ratecode_id
+        description: "The unique identifier for the rate code."
+        tests:
+          - not_null
+          - unique
+      - name: ratecode_description
+        description: "Description of the rate code."
+        tests:
+          - not_null
+
+  - name: dim_payment
+    description: "A dimension table containing payment method information."
+    columns:
+      - name: payment_type_id
+        description: "The type of payment method."
+        tests:
+          - not_null
+          - unique
+      - name: payment_type_description
+        description: "Description of the payment method."

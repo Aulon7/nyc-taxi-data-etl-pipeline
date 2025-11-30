@@ -1,0 +1,14 @@
+dbt_nyctrips:
+  outputs:
+    dev:
+      dataset: nyc_taxi_2024_dataset
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /root/.gcp/gcp-key.json
+      location: US
+      method: service-account
+      priority: interactive
+      project: gcp-data-project-478906
+      threads: 4
+      type: bigquery
+  target: dev

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# dbt artifacts
+target/
+dbt_packages/
+logs/
+
+# Airflow logs
+airflow/logs/
+
+# Environment and credentials
+.env
+config/gcp-key.json
+*.env
+
+# VSCode and OS files
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,92 @@
+version: 2
+
+sources:
+  - name: nyc_taxi_2024_dataset
+    database: gcp-data-project-478906
+    description: "Source data for NYC Yellow Taxi trips in 2024"
+    schema: nyc_taxi_2024_dataset
+    tables:
+      - name: raw_trips
+        description: "Raw trip records from NYC Yellow Taxi dataset"
+        columns:
+          - name: VendorID 
+            description: "Identifier for the taxi vendor or company"
+            tests:
+              - not_null
+          - name: tpep_pickup_datetime
+            description: "Date and time when the passenger was picked up"
+            tests:
+              - not_null
+          - name: tpep_dropoff_datetime
+            description: "Date and time when the passenger was dropped off"
+            tests:
+              - not_null
+          - name: passenger_count
+            description: "Number of passengers on the trip"
+            tests:
+              - not_null
+          - name: trip_distance
+            description: "Distance traveled during the trip (in miles)"
+            tests:
+              - not_null
+          - name: RatecodeID
+            description: "Identifier for the rate code applied to the trip"
+            tests:
+              - not_null
+          - name: store_and_fwd_flag
+            description: "Whether trip data was stored before upload ('Y'/'N')"
+            tests:
+              - accepted_values:
+                  arguments:
+                    values: ['Y','N']
+          - name: PULocationID
+            description: "Pickup location ID referencing NYC Taxi Zone"
+            tests:
+              - not_null
+          - name: DOLocationID
+            description: "Dropoff location ID referencing NYC Taxi Zone"
+            tests:
+              - not_null
+          - name: payment_type
+            description: "Payment method used for the trip (e.g., cash, credit card)"
+            tests:
+              - not_null
+          - name: fare_amount
+            description: "Base fare charged for the trip"
+            tests:
+              - not_null
+          - name: extra
+            description: "Extra charges (e.g., fees for additional services)"
+          - name: mta_tax
+            description: "MTA tax applied to the trip fare"
+          - name: tip_amount
+            description: "Tip amount paid by the passenger"
+          - name: tolls_amount
+            description: "Total tolls paid during the trip"
+          - name: improvement_surcharge
+            description: "Improvement surcharge applied by the city"
+          - name: total_amount
+            description: "Total charged for the trip including fare, taxes, tips, tolls, and surcharges"
+            tests:
+              - not_null
+          - name: congestion_surcharge
+            description: "Congestion surcharge applied for pickups in certain areas"
+          - name: Airport_fee
+            description: "Additional fee for trips to or from airports"
+            
+  - name: bigquery_public_data
+    database: bigquery-public-data
+    description: "Public BigQuery dataset for NYC taxi zones"
+    schema: new_york_taxi_trips
+    tables:
+      - name: taxi_zone_geom
+        description: "NYC taxi zone information including names and boroughs"
+        columns:
+          - name: zone_id
+            description: "Zone ID"
+          - name: zone_name
+            description: "Zone name"
+          - name: borough
+            description: "Borough name"
+          - name: zone_geom
+            description: "Geometric representation of the taxi zone"

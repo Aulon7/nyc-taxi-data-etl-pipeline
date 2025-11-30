@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  airflow:
+    build: ./airflow
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/config/gcp-key.json
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./config:/opt/airflow/config
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+      airflow db migrate &&
+      airflow users create --username admin --password admin --firstname Aulon --lastname Morina --role Admin --email aulonmorina@gmail.com || true &&
+      airflow connections delete 'google_cloud_default' || true && airflow connections add 'google_cloud_default' --conn-type 'google_cloud_platform' --conn-extra '{\"extra__google_cloud_platform__project\": \"gcp-data-project-478906\", \"extra__google_cloud_platform__key_path\": \"/opt/airflow/config/gcp-key.json\", \"extra__google_cloud_platform__scope\": \"https://www.googleapis.com/auth/cloud-platform\"}' &&
+      airflow webserver & airflow scheduler"
+    depends_on:
+      - postgres
+
+  dbt:
+    build: ./dbt_nyctrips
+    environment:
+      DBT_PROFILES_DIR: /root/.dbt
+      GCP_PROJECT_ID: ${GCP_PROJECT_ID}
+      GOOGLE_APPLICATION_CREDENTIALS: /root/.gcp/gcp-key.json
+    volumes:
+      - ./dbt_nyctrips:/usr/app/dbt
+      - ./dbt_nyctrips/profiles.yml:/root/.dbt/profiles.yml:ro
+      - ./config/gcp-key.json:/root/.gcp/gcp-key.json:ro
+    command: tail -f /dev/null
+
+volumes:
+  postgres-data:
